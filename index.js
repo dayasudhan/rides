@@ -1,5 +1,5 @@
 const express = require('express');
-const serverless = require('serverless-http');
+//const serverless = require('serverless-http');
 require('dotenv').config();
 //const MongoClient = require('mongodb').MongoClient;
 const {ObjectId,MongoClient}  = require('mongodb');
@@ -130,13 +130,13 @@ app.patch('/profiles/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-if(process.env.DEV === 'true')
-{
+// if(process.env.DEV === 'true')
+// {
   app.listen(port, () => 
     console.log(`Server is listening on port ${process.env.port}.${process.env.DEV} `)
     
   );
-}
-else{
-  exports.handler = serverless(app);
-}
+//}
+// else{
+//   exports.handler = serverless(app);
+// }
