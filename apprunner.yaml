@@ -3,8 +3,8 @@ runtime: nodejs16
 build:
   commands:    
     build:
-      - npm install --production                                  
+      - npm install                                  
 run:                              
   command: node app.js
-    network:
-    port: 3000
+  network:
+  port: 3000
