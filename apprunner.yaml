@@ -6,3 +6,5 @@ build:
       - npm install --production                                  
 run:                              
   command: node app.js
+    network:
+    port: 3000
