@@ -25,6 +25,7 @@ app.get('/test', (req, res) => res.send('Namaste Dayasudhan 🙏'));
 
 app.get('/current_rides', async (req, res) => {
   try {
+    console.log("get current_rides");
     const ridesCollection = req.db.collection('trips');
     let query = { start_time: { $gt: '2023-07-09 00:00:00'},end_time:{$lt:'2023-07-10 12:59:59' } };
     const rides = await ridesCollection.find(query).toArray();
@@ -36,6 +37,7 @@ app.get('/current_rides', async (req, res) => {
 });
 app.post('/rides', async (req, res) => {
   try {
+    console.log("post rides");
     const ridesCollection = req.db.collection('trips');
     const response = await ridesCollection.insertOne(req.body);
     res.json(response);
@@ -62,8 +64,8 @@ app.delete('/rides/:id', async (req, res) => {
 app.get('/rides', async (req, res) => {
   try {
     const ridesCollection = req.db.collection('trips');
-    const response = await ridesCollection.insertOne(req.body);
-    res.json(response);
+    const rides = await ridesCollection.find().toArray();
+    res.json(rides);
   } catch (error) {
     console.error('Error retrieving users from MongoDB:', error);
     res.sendStatus(500);
