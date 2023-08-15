@@ -59,7 +59,7 @@ app.delete('/rides/:id', async (req, res) => {
   }
 });
 
-app.get('/current_rides', async (req, res) => {
+app.get('/rides', async (req, res) => {
   try {
     const ridesCollection = req.db.collection('trips');
     const response = await ridesCollection.insertOne(req.body);
