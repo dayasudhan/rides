@@ -1,16 +1,16 @@
 const express = require('express');
 const serverless = require('serverless-http');
 require('dotenv').config();
-//const MongoClient = require('mongodb').MongoClient;
+
 const {ObjectId,MongoClient}  = require('mongodb');
-const URI = 'mongodb+srv://heroku_mhgndgwl:sudhan@cluster0.w1k1zag.mongodb.net/?retryWrites=true&w=majority';
-// require('dotenv').config();
-const port =   3000;
+
+
+
 const app = express();
 app.use(express.json());
 app.use(async (req, res, next) => {
   try {
-    const client = await MongoClient.connect(URI);
+    const client = await MongoClient.connect(process.env.URI);
     const db = client.db('test');
 
     req.db = db;
@@ -147,7 +147,7 @@ app.patch('/profiles/:id', async (req, res) => {
 });
 if(process.env.DEV === 'true')
 {
-  app.listen(port, () => 
+  app.listen(process.env.port, () => 
     console.log(`Server is listening on port ${process.env.port}.${process.env.DEV} `)
     
   );
