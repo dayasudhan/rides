@@ -147,8 +147,8 @@ app.patch('/profiles/:id', async (req, res) => {
 });
 if(process.env.DEV === 'true')
 {
-  app.listen(process.env.port, () => 
-    console.log(`Server is listening on port ${process.env.port}.${process.env.DEV} `)
+  app.listen(process.env.PORT, () => 
+    console.log(`Server is listening on port ${process.env.PORT}.${process.env.DEV} `)
     
   );
 }
