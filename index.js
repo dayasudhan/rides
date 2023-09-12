@@ -3,7 +3,7 @@ const serverless = require('serverless-http');
 require('dotenv').config();
 
 const {ObjectId,MongoClient}  = require('mongodb');
-
+const firebaseAdmin = require('./config/firebase-config')
 
 
 const app = express();
@@ -145,6 +145,34 @@ app.patch('/profiles/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+app.get('/pn',  async (req, res) => {
+// app.post('/rides/start/:id', async (req, res) => {
+  try {
+    const topic = 'rides';
+    const message = {
+      data: {
+        score: '850',
+        time: '2:45'
+      },
+      topic: topic
+    };
+    await firebaseAdmin
+    .messaging()
+    .send(message)
+    .then((response) => {
+      console.log('Successfully sent trip message:', response);
+
+    })
+    .catch((error) => {
+      console.error('Error sending message:', error);
+    });
+  } catch (error) {
+    console.error('Error retrieving users from MongoDB:', error);
+    res.sendStatus(500);
+  }
+});
+
+
 if(process.env.DEV === 'true')
 {
   app.listen(process.env.PORT, () => 
