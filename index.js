@@ -14,6 +14,7 @@ app.use(async (req, res, next) => {
     const db = client.db('test');
 
     req.db = db;
+    req.client = client;
     next();
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
@@ -34,6 +35,8 @@ app.get('/current_rides', async (req, res) => {
     console.error('Error retrieving users from MongoDB:', error);
     res.sendStatus(500);
   }
+
+  req.client.close();
 });
 app.post('/rides', async (req, res) => {
   try {
@@ -45,6 +48,8 @@ app.post('/rides', async (req, res) => {
     console.error('Error retrieving users from MongoDB:', error);
     res.sendStatus(500);
   }
+
+  req.client.close();
 });
 app.delete('/rides/:id', async (req, res) => {
   try {
@@ -59,6 +64,8 @@ app.delete('/rides/:id', async (req, res) => {
     console.error('Error retrieving users from MongoDB:', error);
     res.sendStatus(500);
   }
+
+  req.client.close();
 });
 
 app.get('/rides', async (req, res) => {
@@ -70,6 +77,8 @@ app.get('/rides', async (req, res) => {
     console.error('Error retrieving users from MongoDB:', error);
     res.sendStatus(500);
   }
+
+  req.client.close();
 });
 
 app.patch('/rides/:id', async (req, res) => {
@@ -89,6 +98,8 @@ app.patch('/rides/:id', async (req, res) => {
     console.error('Error retrieving users from MongoDB:', error);
     res.sendStatus(500);
   }
+
+  req.client.close();
 });
 app.get('/profiles', async (req, res) => {
   try {
@@ -99,6 +110,8 @@ app.get('/profiles', async (req, res) => {
     console.error('Error retrieving users from MongoDB:', error);
     res.sendStatus(500);
   }
+
+  req.client.close();
 });
 app.post('/profiles', async (req, res) => {
   try {
@@ -110,6 +123,8 @@ app.post('/profiles', async (req, res) => {
     console.error('Error retrieving users from MongoDB:', error);
     res.sendStatus(500);
   }
+
+  req.client.close();
 });
 app.delete('/profiles/:id', async (req, res) => {
   try {
@@ -124,6 +139,8 @@ app.delete('/profiles/:id', async (req, res) => {
     console.error('Error retrieving users from MongoDB:', error);
     res.sendStatus(500);
   }
+
+  req.client.close();
 });
 app.patch('/profiles/:id', async (req, res) => {
   try {
@@ -144,6 +161,8 @@ app.patch('/profiles/:id', async (req, res) => {
     console.error('Error updating user:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
+
+  req.client.close();
 });
 app.get('/pn',  async (req, res) => {
 // app.post('/rides/start/:id', async (req, res) => {
