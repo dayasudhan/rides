@@ -1,10 +1,11 @@
 const express = require('express');
 const serverless = require('serverless-http');
+const axios = require('axios');
 require('dotenv').config();
 
 const {ObjectId,MongoClient}  = require('mongodb');
 const firebaseAdmin = require('./config/firebase-config')
-
+const fcmUrl = 'https://fcm.googleapis.com/fcm/send'; 
 
 const app = express();
 app.use(express.json());
@@ -164,7 +165,78 @@ app.patch('/profiles/:id', async (req, res) => {
 
   req.client.close();
 });
+app.post('/start_ride',  async (req, res) => {
+  console.log("start_ride",req.body);
+  const ridesCollection = req.db.collection('trips');
+  const result = await ridesCollection.findOne({ _id: new ObjectId(req.body.rideId) });
+  const postData = {
+    "to": req.body.to ,
+    "notification": {
+      "body": "New announcement"
+      // "OrganizationId": "2",
+      // "content_available": true,
+      // "priority": "high",
+      // "subtitle": "Elementary School",
+      // "title": "hello"
+    },
+    "data":  result
+  };
+  const customHeaders = {
+    'Authorization': 'key=AAAAdg_f35E:APA91bEgdpg4AH4lanYL7-9s18P6EotNpFKCVT8cDGwcK-uFV13e12eJAOXWfJxBADRQSvi0kn24mTTZbQeNSlWNi8zTvuDWossEJ3vXi1wAFHetwQmwJzmSs9YhC2FLXRRfrRM1qdLb', // Example of an authorization header
+    'Content-Type': 'application/json' // Replace with your custom headers
+  };
+  // console.log("result",result)
+  axios.post(fcmUrl, postData,{headers: customHeaders})
+  .then((response) => {
+    console.log('Response:', response.data);
+    res.send(response.data).status(200);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+
+})
+app.get('/start_ride',  async (req, res) => {
+
+  const postData = {
+    "to": "fv4na3HGS9CRVYRBQE5LTi:APA91bGw9TXGfm5tmS_vSyWirX7Q7YmsdiMBS6hfibOi5i5IghyPl4n6we75EAyuctwHKUP-QJSGmoN2WGBkiPFRVonB-X_DqbuISsLqqFWtp75CfdwiuFRunKbvSop6oLt4UD8vHWiF",
+    "notification": {
+      "body": "New announcement assigned2",
+      "OrganizationId": "2",
+      "content_available": true,
+      "priority": "high",
+      "subtitle": "Elementary School",
+      "title": "hello"
+    },
+    "data":  {
+      "_id": "64aabdb502343f44c4f95f7d",
+      "name": "Male Trip",
+      "location": {
+        "source": {"name": "shimoga", "latitude": 40.7829, "longitude": -73.9654},
+        "destination": {"name": "goa", "latitude": 40.7829, "longitude": -73.9654}
+      },
+      "start_time": "2023-07-09 12:30:00",
+      "end_time": "2023-07-10 12:30:00",
+      "riders": ["6173748a73b3c48b78e4e7f1", "6173748a73b3c48b78e4e7f2"]
+    }
+  };
+  const customHeaders = {
+    'Authorization': 'key=AAAAdg_f35E:APA91bEgdpg4AH4lanYL7-9s18P6EotNpFKCVT8cDGwcK-uFV13e12eJAOXWfJxBADRQSvi0kn24mTTZbQeNSlWNi8zTvuDWossEJ3vXi1wAFHetwQmwJzmSs9YhC2FLXRRfrRM1qdLb', // Example of an authorization header
+    'Content-Type': 'application/json' // Replace with your custom headers
+  };
+  console.log("postData",postData,customHeaders);
+  axios.post(fcmUrl, postData,{headers: customHeaders})
+  .then((response) => {
+    console.log('Response:', response.data);
+    res.send(response.data).status(200);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+});
 app.get('/pn',  async (req, res) => {
+  console.log("inside pn")
+  const registrationTokens = ['device_token_1', 'device_token_2'];
 // app.post('/rides/start/:id', async (req, res) => {
   try {
     const topic = 'rides';
@@ -173,7 +245,11 @@ app.get('/pn',  async (req, res) => {
         score: '850',
         time: '2:45'
       },
-      topic: topic
+      notification: {
+        title: 'Notification Title',
+        body: 'Notification Body',
+      },
+      topic: 'registrationTokens',
     };
     await firebaseAdmin
     .messaging()
