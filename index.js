@@ -69,7 +69,56 @@ app.delete('/rides/:id', async (req, res) => {
 
   req.client.close();
 });
+app.delete('/ridesall', async (req, res) => {
+  try {
+    const ridesCollection = req.db.collection('trips');
+   
+    //const result = await ridesCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+    const result = await ridesCollection.deleteMany({}, function (err, result) {
+      if (err) throw err;
+    
+      console.log(`Deleted ${result.deletedCount} documents from ${collectionName}`);
+    
+      // Close the MongoDB connection
+      client.close();
+    });
+    console.log("result",result)
+    // if (result.deletedCount === 0) {
+    //   return res.status(404).json({ message: 'Document not found' });
+    // }
+    res.status(200).json({ message: 'Ride Document deleted successfully' });
+  } catch (error) {
+    console.error('Error retrieving users from MongoDB:', error);
+    res.sendStatus(500);
+  }
 
+  req.client.close();
+});
+app.delete('/profilesall', async (req, res) => {
+  try {
+    const ridesCollection = req.db.collection('trips');
+   
+    //const result = await ridesCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+    const result = await ridesCollection.deleteMany({}, function (err, result) {
+      if (err) throw err;
+    
+      console.log(`Deleted ${result.deletedCount} documents from ${collectionName}`);
+    
+      // Close the MongoDB connection
+      client.close();
+    });
+    console.log("result",result)
+    // if (result.deletedCount === 0) {
+    //   return res.status(404).json({ message: 'Document not found' });
+    // }
+    res.status(200).json({ message: 'Ride Document deleted successfully' });
+  } catch (error) {
+    console.error('Error retrieving users from MongoDB:', error);
+    res.sendStatus(500);
+  }
+
+  req.client.close();
+});
 app.get('/rides', async (req, res) => {
   try {
     const ridesCollection = req.db.collection('trips');
@@ -138,6 +187,20 @@ app.post('/profiles', async (req, res) => {
     res.sendStatus(500);
   }
 
+  req.client.close();
+});
+app.get('/profiles/:id', async (req, res) => {
+  try {
+    const usersCollection = req.db.collection('profiles');
+    const objectId = new ObjectId(req.params.id);
+    const rides = await usersCollection.findOne({ _id :objectId});
+    console.log("inside rides/id",req.params.id,rides)
+    //const result = await collection.findOne({ _id :objectId});
+    res.json(rides);
+  } catch (error) {
+    console.error('Error retrieving users from MongoDB:', error);
+    res.sendStatus(500);
+  }
   req.client.close();
 });
 app.delete('/profiles/:id', async (req, res) => {
