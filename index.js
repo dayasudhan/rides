@@ -339,12 +339,15 @@ app.post('/complete_ride',  async (req, res) => {
   const result = await ridesCollection.findOneAndUpdate(filter, update, options);
   console.log("result",result);
   const usersCollection = req.db.collection('profiles');
+  if(result.value)
+  {
   const promises  = await result.value.riders.map(async e=>{
     const profile = await usersCollection.findOne({ _id: new ObjectId(e) });
     console.log("profile",profile);
     return profile && profile['fcmToken'];
 
   })
+  
   Promise.all(promises)
   .then(registrationTokens => {
         console.log('Data from all promises:', registrationTokens);
@@ -372,6 +375,8 @@ app.post('/complete_ride',  async (req, res) => {
     .catch(error => {
       console.error('An error occurred:', error);
     });
+  }
+  res.send("error").status(200);
 })
 app.patch('/fcm_token',  async (req, res) => {
   console.log("fcm_token",req.body);
