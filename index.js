@@ -203,6 +203,36 @@ app.get('/profiles/:id', async (req, res) => {
   }
   req.client.close();
 });
+app.get('/profiles/phone/:phone', async (req, res) => {
+  try {
+    const usersCollection = req.db.collection('profiles');
+    //const objectId = new ObjectId(req.params.phone);
+
+    const rides = await usersCollection.findOne({ phone :req.params.phone});
+    console.log("inside rides/phone",req.params.phone,rides)
+    //const result = await collection.findOne({ _id :objectId});
+    res.json(rides);
+  } catch (error) {
+    console.error('Error retrieving users from MongoDB:', error);
+    res.sendStatus(500);
+  }
+  req.client.close();
+});
+app.get('/profiles/email/:email', async (req, res) => {
+  try {
+    const usersCollection = req.db.collection('profiles');
+    //const objectId = new ObjectId(req.params.phone);
+
+    const rides = await usersCollection.findOne({ email :req.params.email});
+    console.log("inside rides/email",req.params.email,rides)
+    //const result = await collection.findOne({ _id :objectId});
+    res.json(rides);
+  } catch (error) {
+    console.error('Error retrieving users from MongoDB:', error);
+    res.sendStatus(500);
+  }
+  req.client.close();
+});
 app.delete('/profiles/:id', async (req, res) => {
   try {
     const usersCollection = req.db.collection('profiles');
